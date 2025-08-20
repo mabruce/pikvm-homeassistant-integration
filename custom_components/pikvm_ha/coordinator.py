@@ -109,8 +109,20 @@ class PiKVMDataUpdateCoordinator(DataUpdateCoordinator):
                 response_msd.raise_for_status()
                 data_msd = response_msd.json()["result"]
 
+                response_atx = await self.hass.async_add_executor_job(
+                    functools.partial(
+                        self.session.get,
+                        f"{self.url}/api/atx",
+                        auth=self.auth,
+                        timeout=10,
+                    )
+                )
+                response_atx.raise_for_status()
+                data_atx = response_atx.json()["result"]
+
                 data_info["msd"] = data_msd
-                _LOGGER.debug("Received PiKVM Info & MSD from %s", self.url)
+                data_info["atx"] = data_atx
+                _LOGGER.debug("Received PiKVM Info, MSD, & ATX from %s", self.url)
 
                 return data_info  # noqa: TRY300
             except AuthenticationFailed as auth_err:

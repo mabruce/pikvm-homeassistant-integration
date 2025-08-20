@@ -83,6 +83,8 @@ async def async_setup_entry(
         sensor_classes["msd_enabled"](coordinator, unique_id_base, device_name),
         sensor_classes["msd_drive"](coordinator, unique_id_base, device_name),
         sensor_classes["msd_storage"](coordinator, unique_id_base, device_name),
+        sensor_classes["atx_enabled"](coordinator, unique_id_base, device_name),
+        sensor_classes["atx_power_led_enabled"](coordinator, unique_id_base, device_name),
     ]
 
     # Dynamically create sensors for extras
@@ -113,6 +115,8 @@ def lazy_import_sensors():
     from .sensors.pikvm_msd_enabled_sensor import PiKVMSDEnabledSensor
     from .sensors.pikvm_msd_storage_sensor import PiKVMSDStorageSensor
     from .sensors.pikvm_throttling_sensor import PiKVMThrottlingSensor
+    from .sensors.pikvm_atx_enabled_sensor import PiKVMATXEnabledSensor
+    from .sensors.pikvm_atx_power_led_sensor import PiKVMATXPowerLEDSensor
 
     return {
         "cpu_temp": PiKVMCpuTempSensor,
@@ -124,4 +128,6 @@ def lazy_import_sensors():
         "msd_enabled": PiKVMSDEnabledSensor,
         "msd_storage": PiKVMSDStorageSensor,
         "throttling": PiKVMThrottlingSensor,
+        "atx_enabled": PiKVMATXEnabledSensor,
+        "atx_power_led_enabled": PiKVMATXPowerLEDSensor,
     }
