@@ -8,15 +8,15 @@ from ..button import PiKVMBaseButton
 _LOGGER = logging.getLogger(__name__)
 
 
-class PiKVMClickPowerButton(PiKVMBaseButton):
+class PiKVMPressResetButton(PiKVMBaseButton):
 
     def __init__(self, coordinator, unique_id_base, device_name) -> None:
         """Initialize the sensor."""
-        name = f"{device_name} Click ATX Power Button"
+        name = f"{device_name} Press Reset Button"
         super().__init__(
             coordinator,
             unique_id_base,
-            "ATX_click_power",
+            "ATX_press_reset",
             name,
             icon="mdi:check-circle",
         )
@@ -27,10 +27,10 @@ class PiKVMClickPowerButton(PiKVMBaseButton):
             response = await self.coordinator.hass.async_add_executor_job(
                 functools.partial(
                     self.coordinator.session.post,
-                    f"{self.coordinator.url}/api/atx/click?button=power",
+                    f"{self.coordinator.url}/api/atx/click?button=reset",
                     auth=self.coordinator.auth,
                     timeout=10,
                 )
             )
         except requests.exceptions.RequestException as err:
-            _LOGGER.error("Failed to click power button")
+            _LOGGER.error("Failed to press reset button")
