@@ -25,7 +25,7 @@ from .const import (
     MANUFACTURER,
 )
 from .coordinator import PiKVMDataUpdateCoordinator
-from .sensor import PiKVMEntity
+from .entity import PiKVMEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -104,7 +104,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
         await asyncio.gather(
             hass.async_add_executor_job(integration.get_platform, "sensor"),
+            hass.async_add_executor_job(integration.get_platform, "button"),
             hass.config_entries.async_forward_entry_setups(entry, ["sensor"]),
+            hass.config_entries.async_forward_entry_setups(entry, ["button"]),
         )
 
     hass.async_create_task(forward_platform())
@@ -129,6 +131,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     """
     await hass.config_entries.async_forward_entry_unload(entry, "sensor")
+    await hass.config_entries.async_forward_entry_unload(entry, "button")
     hass.data[DOMAIN].pop(entry.entry_id)
 
     return True
@@ -151,6 +154,7 @@ async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """
     # Forward the entry removal signal to the 'sensor' component
     await hass.config_entries.async_forward_entry_unload(entry, "sensor")
+    await hass.config_entries.async_forward_entry_unload(entry, "button")
 
     # Remove the entry from the 'pikvm' domain data
     hass.data[DOMAIN].pop(entry.entry_id, None)
