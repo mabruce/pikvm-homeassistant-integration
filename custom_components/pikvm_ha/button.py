@@ -53,7 +53,9 @@ async def async_setup_entry(
     button_classes = lazy_import_buttons()
 
     buttons = [
-         button_classes["power_click"](coordinator, unique_id_base, device_name),
+         button_classes["press_power"](coordinator, unique_id_base, device_name),
+         button_classes["long_press_power"](coordinator, unique_id_base, device_name),
+         button_classes["press_reset"](coordinator, unique_id_base, device_name),
     ]
 
     async_add_entities(buttons, True)
@@ -63,8 +65,12 @@ async def async_setup_entry(
 # pylint: disable=import-outside-toplevel
 def lazy_import_buttons():
      """Lazy load the button classes."""
-     from .buttons.pikvm_atx_short_click import PiKVMClickPowerButton
+     from .buttons.pikvm_atx_press_power_button import PiKVMPressPowerButton
+     from .buttons.pikvm_atx_long_press_power_button import PiKVMLongPressPowerButton
+     from .buttons.pikvm_atx_press_reset_button import PiKVMPressResetButton
 
      return {
-          "power_click": PiKVMClickPowerButton
+          "press_power": PiKVMPressPowerButton,
+          "long_press_power": PiKVMLongPressPowerButton,
+          "press_reset": PiKVMPressResetButton,
      }
